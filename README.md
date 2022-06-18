@@ -3,7 +3,7 @@ This is a bot programed in Python and the idea is to optimize SELL and BUY order
 - FULL MOON: Buy BTC
 - NEW MOON: Sell BTC
 
-![Moon trading](https://github.com/amuracciole/binance/blob/main/picture.png)
+![Moon trading](https://github.com/amuracciole/moon_bot_binance/blob/main/picture.png)
 
 **ALERT!: This is an academic task and NOT AN INVST ADVISE**
 
