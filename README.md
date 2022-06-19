@@ -1,11 +1,11 @@
-# BinanceBot
+# Binance Moon Bot
 This is a bot programed in Python and the idea is to optimize SELL and BUY orders taking into account the moon state:
-- FULL MOON: Buy BTC
-- NEW MOON: Sell BTC
+- **FULL MOON**: Buy BTC (dark)
+- **NEW MOON**: Sell BTC (white)
 
 ![Moon trading](https://github.com/amuracciole/moon_bot_binance/blob/main/picture.png)
 
-**ALERT!: This is an academic task and NOT AN INVEST ADVISE**
+:warning: **ALERT!: This is an academic task and NOT AN INVEST ADVISE** :warning:
 
 ## Keys
 Plese add you own API_KEY and API_SECRET in config.py file.
