@@ -67,7 +67,7 @@ for x in dates.full_moon:
         else:
             print("ALERT!! For some reason the purchase could not be made")
 
-#Get balances bespues
+#Get balances (after))
 print("\nBALANCE (AFTER):")
 balances_after = get_balance()
 print("BTC: " + str(balances_after[0]))
