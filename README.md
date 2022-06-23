@@ -13,7 +13,7 @@ Plese add you own kes and paths in config.py file
 - EMAIL_FROM -> Mail that sends the notifications
 - EMAIL_TO -> Mail where notifications are received
 - EMAIL_PASS -> This is not your email account password, is a "key" obtained in your email settings to allow you send messages from external API
-- HISTORIC_PAY and LOGS_PATH -> Complete path that you save those files
+- HISTORIC_PATH and LOGS_PATH -> Complete path that you save those files
 
 ## Email :email:
 Allows you to send an email with a notification once bot make an operation. This is a second way to save a history
