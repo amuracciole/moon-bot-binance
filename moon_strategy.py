@@ -72,7 +72,8 @@ for x in dates.new_moon:
         #print("\nTODAY IS NEW MOON -- SELL!")
         before_quantity = str(round(balances[0],8))
         sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=str(round(balances[0],5)))
-        #sell_order = client.order_market_sell(symbol="BTCBUSD", quantity=str(round(balances[0],5)))
+        #sell_order = client.order_market(symbol="BTCBUSD",side="SELL", quantity=str(round(balances[0],5)))
+        #sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=str(round(balances[0],5)))
         if(sell_order == {}): 
             get_price("Sell", today, before_quantity)
             send_email("SELL", today, before_quantity)
@@ -83,7 +84,8 @@ for x in dates.full_moon:
     if(today==x):
         #print("\nTODAY IS FULL MOON -- BUY!")
         buy_order = client.create_test_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=str(round(balances[1],5)))
-        #buy_order = client.order_market_buy(symbol="BTCBUSD", quantity=str(round(get_balance[1],5)))
+        #buy_order = client.order_market(symbol="BTCBUSD", side="BUY", quantity=str(round(balances[1],5)))
+        #buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=str(round(balances[1],5)))
         if(buy_order == {}): 
             get_price("Buy", today, get_balance()[0])
             buy_btc = get_balance()
