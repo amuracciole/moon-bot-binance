@@ -25,3 +25,7 @@ You must include the following line in you crontab file to run the script every 
 
 ## Test orders :exclamation:
 This script will never buy or sell BTC because only run "test_order". In case you want to work with real operations, please comment test_order lines and delete "#" before "order_market_sell" and "order_market_buy" lines
+
+
+
+Note: This repository is still in progress of improvements

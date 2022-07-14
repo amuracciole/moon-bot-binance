@@ -18,11 +18,11 @@ def get_balance():
     busd_float = float(busd_balance["free"])
     return btc_float, busd_float
 
-def get_price(side, date, quantity):
-    current_prices = client.get_all_tickers()
-    for coin in current_prices:
-        if(coin["symbol"] == "BTCBUSD"):
-            add_line_in_file(str(date) + "      " + str(side) + "       " + str(quantity) + "       " + str(coin["price"]))
+def get_current_price(pair):
+  current_prices = client.get_all_tickers()
+  for coin in current_prices:
+      if(coin["symbol"] == pair):
+         return(coin["price"])
 
 def add_line_in_file(text):
     file_object = open(config.HISTORIC_PATH, 'a')
@@ -56,7 +56,7 @@ def send_email(side, date, quantity):
 
     server.quit()
 
-#CURRENT DATE
+#Current date
 today = str(date.today())
 print("\n**********************\n")
 print("DATE:", today)
@@ -67,32 +67,24 @@ print("\nBALANCE (BEFORE):")
 balances = get_balance()
 print("BTC: " + str(balances[0]))
 print("BUSD: " + str(balances[1]))
+
+#SELL
 for x in dates.new_moon:
     if(today==x):
-        #print("\nTODAY IS NEW MOON -- SELL!")
-        before_quantity = str(round(balances[0],8))
-        sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=str(round(balances[0],5)))
-        #sell_order = client.order_market(symbol="BTCBUSD",side="SELL", quantity=str(round(balances[0],5)))
-        #sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=str(round(balances[0],5)))
-        if(sell_order == {}): 
-            get_price("Sell", today, before_quantity)
-            send_email("SELL", today, before_quantity)
-        else:
-            print("ALERT!! For some reason the sale could not be made")
+        qnt_sell=str(balances[0])[0:7]
+        sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+        #sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+        add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "       " + str(get_current_price("BTCBUSD")))
+        send_email("BUY", today, str(qnt_sell))
 
+#BUY
 for x in dates.full_moon:
     if(today==x):
-        #print("\nTODAY IS FULL MOON -- BUY!")
-        buy_order = client.create_test_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=str(round(balances[1],5)))
-        #buy_order = client.order_market(symbol="BTCBUSD", side="BUY", quantity=str(round(balances[1],5)))
-        #buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=str(round(balances[1],5)))
-        if(buy_order == {}): 
-            get_price("Buy", today, get_balance()[0])
-            buy_btc = get_balance()
-            buy_btc = str(buy_btc[0])
-            send_email("BUY", today, buy_btc)
-        else:
-            print("ALERT!! For some reason the purchase could not be made")
+        qnt_buy = str(balances[1]/float(get_current_price("BTCBUSD")))[0:7]
+        buy_order = client.create_test_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
+        #buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
+        add_line_in_file(str(today) + "      " + "BUY" + "       " + str(get_balance()[0]) + "       " + str(get_current_price("BTCBUSD")))
+        send_email("BUY", today, str(get_balance()[0]))
 
 #Get balances (after)
 print("\nBALANCE (AFTER):")
