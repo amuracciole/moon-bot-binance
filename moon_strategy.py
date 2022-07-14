@@ -75,7 +75,7 @@ for x in dates.new_moon:
         sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
         #sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
         add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "       " + str(get_current_price("BTCBUSD")))
-        send_email("BUY", today, str(qnt_sell))
+        send_email("SELL", today, str(qnt_sell))
 
 #BUY
 for x in dates.full_moon:
