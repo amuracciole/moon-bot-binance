@@ -24,27 +24,35 @@ def get_current_price(pair):
       if(coin["symbol"] == pair):
          return(coin["price"])
 
-def add_line_in_file(text):
-    file_object = open(config.HISTORIC_PATH, 'a')
-    file_object.write(str(text) + "\n")
-    file_object.close()
-    print("\n  DATE        OPERATION       BTC              PRICE        ")
-    print(str(text))
+def add_line_in_file(text, file):
+    if(file=="historic"):
+        file_object = open(config.HISTORIC_PATH, 'a')
+        file_object.write(str(text) + "\n")
+        file_object.close()
+        #print("\n  DATE        OPERATION       BTC              PRICE        ")
+        #print(str(text))
+    elif(file=="buy"):
+        file_object = open(config.BUY_PATH, 'a')
+        file_object.write(str(text) + "\n")
+        file_object.close()
+        #print(str(text))
+    elif(file=="sell"):
+        file_object = open(config.SELL_PATH, 'a')
+        file_object.write(str(text) + "\n")
+        file_object.close()
+        #print(str(text))
 
 def add_log(text):
     file_object = open(config.LOGS_PATH, 'a')
     file_object.write(str(text) + "\n")
     file_object.close()
 
-def send_email(side, date, quantity):
+def send_email_buy(side, date, quantity):
     correo_origen = config.EMAIL_FROM
     clave = config.EMAIL_PASS
     correo_destino =config.EMAIL_TO
 
-    if (side == "SELL"):
-      msg = MIMEText("(" + str(date) + ") -  BOT " + str(side) + " " +  str(quantity) +  " BTC")
-    elif (side == "BUY"):
-      msg = MIMEText("(" + str(date) + ") -  BOT " + str(side) + " " +  str(quantity) + " BTC")
+    msg = MIMEText("(" + str(date) + ") -  BOT " + str(side) + " - " +  str(quantity) + " BTC")
     msg['Subject'] = str(date) + ' --> BTC BOT Operation'
     msg['From'] = correo_origen
     msg['To'] = correo_destino
@@ -55,6 +63,38 @@ def send_email(side, date, quantity):
     server.sendmail(correo_origen,correo_destino,msg.as_string())
 
     server.quit()
+
+def send_email_sell(side, date, quantity, earn):
+    correo_origen = config.EMAIL_FROM
+    clave = config.EMAIL_PASS
+    correo_destino =config.EMAIL_TO
+
+    msg = MIMEText("(" + str(date) + ") -  BOT " + str(side) + " - " +  str(quantity) +  " BTC")
+    msg['Subject'] = str(date) + ' --> BTC BOT Operation --> (' + str(earn) + ' %)' 
+    msg['From'] = correo_origen
+    msg['To'] = correo_destino
+
+    server = smtplib.SMTP('smtp.gmail.com',587)
+    server.starttls()
+    server.login(correo_origen,clave)
+    server.sendmail(correo_origen,correo_destino,msg.as_string())
+
+    server.quit()
+
+def calculate_diffenrence(last_buy_price, last_sell_price):
+    #print("LAST BUY" + last_buy_price)
+    #print("LAST SELL" + last_sell_price)
+    result = round((float(last_sell_price)-float(last_buy_price))*100/float(last_buy_price),2)
+    return(result)
+
+def read_last_buy_price(file):
+    with open(file, 'r') as f:
+        for line in f:
+            pass
+        last_line = line
+    #print("LAST LINE: " + str(last_line))
+    return(last_line)
+
 
 #Current date
 today = str(date.today())
@@ -74,8 +114,14 @@ for x in dates.new_moon:
         qnt_sell=str(balances[0])[0:7]
         sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
         #sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
-        add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "       " + str(get_current_price("BTCBUSD")))
-        send_email("SELL", today, str(qnt_sell))
+        current_price=str(get_current_price("BTCBUSD"))
+        add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "             " + current_price,"historic")
+        add_line_in_file(current_price,"sell")
+        last_buy_price=str(read_last_buy_price(config.BUY_PATH))
+        last_sell_price=str(get_current_price("BTCBUSD"))
+        diff=calculate_diffenrence(last_buy_price, last_sell_price)
+        add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " %", "historic")
+        send_email_sell("SELL", today, str(qnt_sell),str(diff))
 
 #BUY
 for x in dates.full_moon:
@@ -83,8 +129,9 @@ for x in dates.full_moon:
         qnt_buy = str(balances[1]/float(get_current_price("BTCBUSD")))[0:7]
         buy_order = client.create_test_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
         #buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
-        add_line_in_file(str(today) + "      " + "BUY" + "       " + str(get_balance()[0]) + "       " + str(get_current_price("BTCBUSD")))
-        send_email("BUY", today, str(get_balance()[0]))
+        add_line_in_file(str(today) + "      " + "BUY" + "       " + str(get_balance()[0]) + "             " + str(get_current_price("BTCBUSD")),"historic")
+        add_line_in_file(str(get_current_price("BTCBUSD")),"buy")
+        send_email_buy("BUY", today, str(get_balance()[0]))
 
 #Get balances (after)
 print("\nBALANCE (AFTER):")
