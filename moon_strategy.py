@@ -118,7 +118,7 @@ for x in dates.new_moon:
         add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "             " + current_price,"historic")
         add_line_in_file(current_price,"sell")
         last_buy_price=str(read_last_buy_price(config.BUY_PATH))
-        last_sell_price=str(get_current_price("BTCBUSD"))
+        last_sell_price=current_price
         diff=calculate_diffenrence(last_buy_price, last_sell_price)
         add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " %", "historic")
         send_email_sell("SELL", today, str(qnt_sell),str(diff))
