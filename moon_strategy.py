@@ -10,6 +10,10 @@ from email.mime.text import MIMEText
 
 client = Client(config.API_KEY, config.API_SECRET)
 
+###################
+##   FUNCTIONS   ##
+###################
+
 def get_balance():
     btc_balance = client.get_asset_balance(asset='BTC')
     busd_balance = client.get_asset_balance(asset='BUSD')
@@ -47,30 +51,16 @@ def add_log(text):
     file_object.write(str(text) + "\n")
     file_object.close()
 
-def send_email_buy(side, date, quantity):
+def send_email(side, date, quantity, earn):
     correo_origen = config.EMAIL_FROM
     clave = config.EMAIL_PASS
     correo_destino =config.EMAIL_TO
 
     msg = MIMEText("(" + str(date) + ") -  BOT " + str(side) + " - " +  str(quantity) + " BTC")
-    msg['Subject'] = str(date) + ' --> BTC BOT Operation'
-    msg['From'] = correo_origen
-    msg['To'] = correo_destino
-
-    server = smtplib.SMTP('smtp.gmail.com',587)
-    server.starttls()
-    server.login(correo_origen,clave)
-    server.sendmail(correo_origen,correo_destino,msg.as_string())
-
-    server.quit()
-
-def send_email_sell(side, date, quantity, earn):
-    correo_origen = config.EMAIL_FROM
-    clave = config.EMAIL_PASS
-    correo_destino =config.EMAIL_TO
-
-    msg = MIMEText("(" + str(date) + ") -  BOT " + str(side) + " - " +  str(quantity) +  " BTC")
-    msg['Subject'] = str(date) + ' --> BTC BOT Operation --> (' + str(earn) + ' %)' 
+    if (side=="BUY"):
+        msg['Subject'] = str(date) + ' --> BTC BOT Operation'
+    elif (side=="SELL"):
+        msg['Subject'] = str(date) + ' --> BTC BOT Operation --> (' + str(earn) + ' %)' 
     msg['From'] = correo_origen
     msg['To'] = correo_destino
 
@@ -82,8 +72,6 @@ def send_email_sell(side, date, quantity, earn):
     server.quit()
 
 def calculate_diffenrence(last_buy_price, last_sell_price):
-    #print("LAST BUY" + last_buy_price)
-    #print("LAST SELL" + last_sell_price)
     result = round((float(last_sell_price)-float(last_buy_price))*100/float(last_buy_price),2)
     return(result)
 
@@ -92,9 +80,12 @@ def read_last_buy_price(file):
         for line in f:
             pass
         last_line = line
-    #print("LAST LINE: " + str(last_line))
     return(last_line)
 
+
+###################
+##    PROGRAM    ##
+###################
 
 #Current date
 today = str(date.today())
@@ -102,7 +93,7 @@ print("\n**********************\n")
 print("DATE:", today)
 add_log(today)
 
-#Get balance (before)
+#Get balance (before operation)
 print("\nBALANCE (BEFORE):")
 balances = get_balance()
 print("BTC: " + str(balances[0]))
@@ -121,7 +112,7 @@ for x in dates.new_moon:
         last_sell_price=current_price
         diff=calculate_diffenrence(last_buy_price, last_sell_price)
         add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " %", "historic")
-        send_email_sell("SELL", today, str(qnt_sell),str(diff))
+        send_email("SELL", today, str(qnt_sell), str(diff))
 
 #BUY
 for x in dates.full_moon:
@@ -131,7 +122,7 @@ for x in dates.full_moon:
         #buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
         add_line_in_file(str(today) + "      " + "BUY" + "       " + str(get_balance()[0]) + "             " + str(get_current_price("BTCBUSD")),"historic")
         add_line_in_file(str(get_current_price("BTCBUSD")),"buy")
-        send_email_buy("BUY", today, str(get_balance()[0]))
+        send_email("BUY", today, str(get_balance()[0]), 0)
 
 #Get balances (after)
 print("\nBALANCE (AFTER):")
