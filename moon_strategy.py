@@ -2,11 +2,11 @@
 
 from symtable import Symbol
 from binance.client import Client
+from telegram_bot import *
+from email_bot import *
 import config
 import dates
 from datetime import date
-import smtplib
-from email.mime.text import MIMEText
 
 client = Client(config.API_KEY, config.API_SECRET)
 
@@ -17,7 +17,6 @@ client = Client(config.API_KEY, config.API_SECRET)
 def get_balance():
     btc_balance = client.get_asset_balance(asset='BTC')
     busd_balance = client.get_asset_balance(asset='BUSD')
-    #Convert balances to float
     btc_float = float(btc_balance["free"])
     busd_float = float(busd_balance["free"])
     return btc_float, busd_float
@@ -33,43 +32,21 @@ def add_line_in_file(text, file):
         file_object = open(config.HISTORIC_PATH, 'a')
         file_object.write(str(text) + "\n")
         file_object.close()
-        #print("\n  DATE        OPERATION       BTC              PRICE        ")
-        #print(str(text))
+
     elif(file=="buy"):
         file_object = open(config.BUY_PATH, 'a')
         file_object.write(str(text) + "\n")
         file_object.close()
-        #print(str(text))
+
     elif(file=="sell"):
         file_object = open(config.SELL_PATH, 'a')
         file_object.write(str(text) + "\n")
         file_object.close()
-        #print(str(text))
 
 def add_log(text):
     file_object = open(config.LOGS_PATH, 'a')
     file_object.write(str(text) + "\n")
     file_object.close()
-
-def send_email(side, date, quantity, earn):
-    correo_origen = config.EMAIL_FROM
-    clave = config.EMAIL_PASS
-    correo_destino =config.EMAIL_TO
-
-    msg = MIMEText("(" + str(date) + ") -  BOT " + str(side) + " - " +  str(quantity) + " BTC")
-    if (side=="BUY"):
-        msg['Subject'] = str(date) + ' --> BTC BOT Operation'
-    elif (side=="SELL"):
-        msg['Subject'] = str(date) + ' --> BTC BOT Operation --> (' + str(earn) + ' %)' 
-    msg['From'] = correo_origen
-    msg['To'] = correo_destino
-
-    server = smtplib.SMTP('smtp.gmail.com',587)
-    server.starttls()
-    server.login(correo_origen,clave)
-    server.sendmail(correo_origen,correo_destino,msg.as_string())
-
-    server.quit()
 
 def calculate_diffenrence(last_buy_price, last_sell_price):
     result = round((float(last_sell_price)-float(last_buy_price))*100/float(last_buy_price),2)
@@ -112,6 +89,9 @@ for x in dates.new_moon:
         last_sell_price=current_price
         diff=calculate_diffenrence(last_buy_price, last_sell_price)
         add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " %", "historic")
+        
+        #Send telegram message and email
+        send_telegram_msg("SELL", today, str(qnt_sell), str(diff))
         send_email("SELL", today, str(qnt_sell), str(diff))
 
 #BUY
@@ -122,9 +102,12 @@ for x in dates.full_moon:
         #buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
         add_line_in_file(str(today) + "      " + "BUY" + "       " + str(get_balance()[0]) + "             " + str(get_current_price("BTCBUSD")),"historic")
         add_line_in_file(str(get_current_price("BTCBUSD")),"buy")
+
+        #Send telegram message and email
+        send_telegram_msg("BUY", today, str(get_balance[0]), 0)
         send_email("BUY", today, str(get_balance()[0]), 0)
 
-#Get balances (after)
+#Get balances (after operation)
 print("\nBALANCE (AFTER):")
 balances_after = get_balance()
 print("BTC: " + str(balances_after[0]))

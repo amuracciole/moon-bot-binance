@@ -18,6 +18,9 @@ Plese add you own kes and paths in config.py file
 ## Email :email:
 Allows you to send an email with a notification once bot make an operation. This is a second way to save a history
 
+## Telegram :iphone:
+Allows you to send a Telegram message with a notification once bot make an operation. This is a third way to save a history
+
 ## Crontab :stopwatch:
 You must include the following line in you crontab file to run the script every day at 4:00 AM (You can schedule as you wish)
 
