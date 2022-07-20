@@ -21,5 +21,3 @@ def send_email(side, date, quantity, earn):
     server.sendmail(correo_origen,correo_destino,msg.as_string())
 
     server.quit()
-
-send_email("BUY", "20/07/2022", 0.2, 0)
