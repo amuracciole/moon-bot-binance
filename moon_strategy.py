@@ -104,7 +104,7 @@ for x in dates.full_moon:
         add_line_in_file(str(get_current_price("BTCBUSD")),"buy")
 
         #Send telegram message and email
-        send_telegram_msg("BUY", today, str(get_balance[0]), 0)
+        send_telegram_msg("BUY", today, str(get_balance()[0]), 0)
         send_email("BUY", today, str(get_balance()[0]), 0)
 
 #Get balances (after operation)

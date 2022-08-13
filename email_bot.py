@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import smtplib
 from email.mime.text import MIMEText
 import config
