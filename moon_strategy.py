@@ -42,6 +42,11 @@ def add_line_in_file(text, file):
         file_object = open(config.SELL_PATH, 'a')
         file_object.write(str(text) + "\n")
         file_object.close()
+    
+    elif(file=="flag"):
+        file_object = open(config.FLAG_PATH, 'a')
+        file_object.write(str(text) + "\n")
+        file_object.close()
 
 def add_log(text):
     file_object = open(config.LOGS_PATH, 'a')
@@ -52,7 +57,7 @@ def calculate_diffenrence(last_buy_price, last_sell_price):
     result = round((float(last_sell_price)-float(last_buy_price))*100/float(last_buy_price),2)
     return(result)
 
-def read_last_buy_price(file):
+def read_last_value(file):
     with open(file, 'r') as f:
         for line in f:
             pass
@@ -76,23 +81,46 @@ balances = get_balance()
 print("BTC: " + str(balances[0]))
 print("BUSD: " + str(balances[1]))
 
+sell_flag = read_last_value(config.FLAG_PATH)
+no_today_flag=True
+
 #SELL
 for x in dates.new_moon:
-    if(today==x):
+    if(today==x and sell_flag=="1\n"):
         qnt_sell=str(balances[0])[0:7]
         sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
         #sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
         current_price=str(get_current_price("BTCBUSD"))
         add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "             " + current_price,"historic")
         add_line_in_file(current_price,"sell")
-        last_buy_price=str(read_last_buy_price(config.BUY_PATH))
+        last_buy_price=str(read_last_value(config.BUY_PATH))
         last_sell_price=current_price
         diff=calculate_diffenrence(last_buy_price, last_sell_price)
-        add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " %", "historic")
-        
+        add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " % \n", "historic")
+        add_line_in_file("0", "flag")
+       
         #Send telegram message and email
         send_telegram_msg("SELL", today, str(qnt_sell), str(diff))
         send_email("SELL", today, str(qnt_sell), str(diff))
+        no_today_flag=False
+    
+if (no_today_flag==True and sell_flag=="1\n"):
+    current_price=str(get_current_price("BTCBUSD"))
+    last_buy_price = read_last_value(config.BUY_PATH)
+    diff=calculate_diffenrence(last_buy_price, current_price)
+    if(diff>=10):
+        qnt_sell=str(balances[0])[0:7]
+        sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+        #sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+        add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "             " + current_price,"historic")
+        add_line_in_file(current_price,"sell")
+        add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " % \n", "historic")
+        add_line_in_file("0", "flag")
+
+        #Send telegram message and email
+        send_telegram_msg("SELL", today, str(qnt_sell), str(diff))
+        send_email("SELL", today, str(qnt_sell), str(diff))
+
 
 #BUY
 for x in dates.full_moon:
@@ -100,8 +128,9 @@ for x in dates.full_moon:
         qnt_buy = str(balances[1]/float(get_current_price("BTCBUSD")))[0:7]
         buy_order = client.create_test_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
         #buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
-        add_line_in_file(str(today) + "      " + "BUY" + "       " + str(get_balance()[0]) + "             " + str(get_current_price("BTCBUSD")),"historic")
+        add_line_in_file(str(today) + "      " + "BUY" + "        " + str(get_balance()[0]) + "           " + str(get_current_price("BTCBUSD")),"historic")
         add_line_in_file(str(get_current_price("BTCBUSD")),"buy")
+        add_line_in_file("1", "flag")
 
         #Send telegram message and email
         send_telegram_msg("BUY", today, str(get_balance()[0]), 0)
