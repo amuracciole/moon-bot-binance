@@ -3,7 +3,7 @@ This is a bot programed in Python and the idea is to optimize SELL and BUY order
 - **FULL MOON**: Buy BTC :full_moon:
 - **NEW MOON**: Sell BTC :new_moon:
 
-However, guided by the motto "better to gain a little than to lose a lot", if between the full moon and the new moon the price of BTC increases by 10% since the last purchase, then the bot is programmed to sell and thus obtain a considerable profit (more than 10%).
+However, guided by the motto **"better to gain a little than to lose a lot"**, if between the full moon and the new moon the price of BTC increases by 10% since the last purchase, then the bot is programmed to sell and thus obtain a considerable profit (more than 10%).
 
 ![Moon trading](https://github.com/amuracciole/moon_bot_binance/blob/main/picture.png)
 
@@ -15,7 +15,7 @@ Plese add you own keys and paths in [config.py](https://github.com/amuracciole/m
 - EMAIL_FROM -> Mail that sends the notifications
 - EMAIL_TO -> Mail where notifications are received
 - EMAIL_PASS -> This is not your email account password, is a "key" obtained in your email settings to allow you send messages from external API
-- HISTORIC_PATH & LOGS_PATH -> Complete path that you save those files
+- HISTORIC_PATH, LOGS_PATH and FLAG_PATH-> Complete path that you save those files
 - BUY_PATH & SELL_PATH -> Complete path that you save those files. These files are use to calculare earns
 - TELEGRAM_TOKEN & TELEGRAM_CHAT_ID: These are Telegram information. To get the token, you must create a Telegram Bot. I recommend BotFather
 
