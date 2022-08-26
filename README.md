@@ -15,9 +15,9 @@ Plese add you own keys and paths in [config.py](https://github.com/amuracciole/m
 - EMAIL_FROM -> Mail that sends the notifications
 - EMAIL_TO -> Mail where notifications are received
 - EMAIL_PASS -> This is not your email account password, is a "key" obtained in your email settings to allow you send messages from external API
-- HISTORIC_PATH, LOGS_PATH and FLAG_PATH-> Complete path that you save those files
+- HISTORIC_PATH, LOGS_PATH, FLAG_PATH & DIFF_PATH -> Complete path that you save those files
 - BUY_PATH & SELL_PATH -> Complete path that you save those files. These files are use to calculare earns
-- TELEGRAM_TOKEN & TELEGRAM_CHAT_ID: These are Telegram information. To get the token, you must create a Telegram Bot. I recommend BotFather
+- TELEGRAM_TOKEN & TELEGRAM_CHAT_ID -> These are Telegram information. To get the token, you must create a Telegram Bot. I recommend BotFather
 
 ## Email :email:
 Allows you to send an email with a notification once bot make an operation. This is a second way to save a history
