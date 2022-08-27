@@ -12,13 +12,7 @@ def send_telegram_msg(side, date, quantity, earn):
     if(side=="BUY"):
         text= "(" + str(date) + ") --> " + str(side) + "\n----------------------\n" + str(quantity) + " BTC"
     elif(side=="SELL"):
-        if(earn > 0):
-            icon="🟢"
-        elif(earn < 0):
-            icon="🔴"
-        else:
-            icon="🟡"
-        text= "(" + str(date) + ") --> " + str(side) + "\n-----------------------\n" + str(quantity) + " BTC \n\n" + icon + "EARN: " + str(earn) + " %"
+        text= "(" + str(date) + ") --> " + str(side) + "\n-----------------------\n" + str(quantity) + " BTC \n\nEARN: " + str(earn) + " %"
     url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text=" + text
     results = requests.get(url_req)
     print(results.json())
