@@ -130,6 +130,9 @@ if (no_today_flag==True and sell_flag=="1\n"):
         send_telegram_msg("SELL", today, str(qnt_sell), str(diff))
         send_email("SELL", today, str(qnt_sell), str(diff))
 else:
+    current_price=str(get_current_price("BTCBUSD"))
+    last_buy_price = read_last_value(config.BUY_PATH)
+    diff=calculate_diffenrence(last_buy_price, current_price)
     add_line_in_file(str(today) + " - " + str(diff) + " %", "difference")
 
 
