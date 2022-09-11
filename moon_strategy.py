@@ -93,8 +93,8 @@ no_today_flag=True
 for x in dates.new_moon:
     if(today==x and sell_flag=="1\n"):
         qnt_sell=str(balances[0])[0:7]
-        sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
-        #sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+        #sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+        sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
         current_price=str(get_current_price("BTCBUSD"))
         add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "             " + current_price,"historic")
         add_line_in_file(current_price,"sell")
@@ -111,37 +111,40 @@ for x in dates.new_moon:
         send_email("SELL", today, str(qnt_sell), str(diff))
         no_today_flag=False
 
-current_price=str(get_current_price("BTCBUSD"))
-last_buy_price = read_last_value(config.BUY_PATH)
-diff=calculate_diffenrence(last_buy_price, current_price)
-add_line_in_file(str(today) + " - " + str(diff) + " %", "difference")
 if (no_today_flag==True and sell_flag=="1\n" and diff>=10):
     qnt_sell=str(balances[0])[0:7]
-    sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
-    #sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+    #sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+    sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
     add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "             " + current_price,"historic")
     add_line_in_file(current_price,"sell")
     add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " % \n", "historic")
     add_line_in_file("0", "flag")
 
+    current_price=str(get_current_price("BTCBUSD"))
+    last_buy_price = read_last_value(config.BUY_PATH)
+    diff=calculate_diffenrence(last_buy_price, current_price)
+    add_line_in_file(str(today) + " - " + str(diff) + " % - SELL!", "difference")
+
     #Send telegram message and email
     send_telegram_msg("SELL", today, str(qnt_sell), str(diff))
     send_email("SELL", today, str(qnt_sell), str(diff))
-
 
 #BUY
 for x in dates.full_moon:
     if(today==x):
         qnt_buy = str(balances[1]/float(get_current_price("BTCBUSD")))[0:7]
-        buy_order = client.create_test_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
-        #buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
+        #buy_order = client.create_test_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
+        buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
         add_line_in_file(str(today) + "      " + "BUY" + "        " + str(get_balance()[0]) + "           " + str(get_current_price("BTCBUSD")),"historic")
         add_line_in_file(str(get_current_price("BTCBUSD")),"buy")
         add_line_in_file("1", "flag")
 
+        add_line_in_file(str(today) + " - 0% BUY!", "difference")
+
         #Send telegram message and email
         send_telegram_msg("BUY", today, str(get_balance()[0]), 0)
         send_email("BUY", today, str(get_balance()[0]), 0)
+
 
 #Get balances (after operation)
 print("\nBALANCE (AFTER):")
