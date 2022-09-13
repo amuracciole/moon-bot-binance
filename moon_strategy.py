@@ -89,18 +89,18 @@ print("BUSD: " + str(balances[1]))
 sell_flag = read_last_value(config.FLAG_PATH)
 no_today_flag=True
 
+last_buy_price=str(read_last_value(config.BUY_PATH))
+current_price=str(get_current_price("BTCBUSD"))
+diff=calculate_diffenrence(last_buy_price, current_price)
+
 #SELL
 for x in dates.new_moon:
     if(today==x and sell_flag=="1\n"):
         qnt_sell=str(balances[0])[0:7]
         #sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
         sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
-        current_price=str(get_current_price("BTCBUSD"))
         add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "             " + current_price,"historic")
         add_line_in_file(current_price,"sell")
-        last_buy_price=str(read_last_value(config.BUY_PATH))
-        last_sell_price=current_price
-        diff=calculate_diffenrence(last_buy_price, last_sell_price)
         
         add_line_in_file(str(today) + " - " + str(diff) + " % - SELL!", "difference")
         add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " % \n", "historic")
@@ -111,6 +111,7 @@ for x in dates.new_moon:
         send_email("SELL", today, str(qnt_sell), str(diff))
         no_today_flag=False
 
+
 if (no_today_flag==True and sell_flag=="1\n" and diff>=10):
     qnt_sell=str(balances[0])[0:7]
     #sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
@@ -120,14 +121,14 @@ if (no_today_flag==True and sell_flag=="1\n" and diff>=10):
     add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " % \n", "historic")
     add_line_in_file("0", "flag")
 
-    current_price=str(get_current_price("BTCBUSD"))
-    last_buy_price = read_last_value(config.BUY_PATH)
-    diff=calculate_diffenrence(last_buy_price, current_price)
     add_line_in_file(str(today) + " - " + str(diff) + " % - SELL!", "difference")
 
     #Send telegram message and email
     send_telegram_msg("SELL", today, str(qnt_sell), str(diff))
     send_email("SELL", today, str(qnt_sell), str(diff))
+
+else:
+    add_line_in_file(str(today) + " - " + str(diff) + " %", "difference")
 
 #BUY
 for x in dates.full_moon:
