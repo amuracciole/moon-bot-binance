@@ -27,6 +27,12 @@ def read_last_value(file):
         last_line = line
     return(last_line)
 
+def read_last_history_value(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+        return lines[-2]
+
+
 
 ###################
 ##    PROGRAM    ##
@@ -36,9 +42,9 @@ sell_flag = read_last_value(config.FLAG_PATH)
 last_buy_price=str(read_last_value(config.BUY_PATH))
 current_price=str(get_current_price("BTCBUSD"))
 diff=calculate_diffenrence(last_buy_price, current_price)
-btc_bought=read_last_value(config.HISTORIC_PATH)[27:-26]
-used_busd = float(str(btc_bought))*float(str(last_buy_price))
 if(sell_flag == "1\n"):
+    btc_bought=read_last_value(config.HISTORIC_PATH)[27:-26]
+    used_busd = float(str(btc_bought))*float(str(last_buy_price))
     print("\n--------------------")
     print("LAST BUY: " + str(last_buy_price[:-7])+ " BUSD")
     print("CURRENT PRICE: " + str(current_price[:-6]) + " BUSD")
@@ -47,4 +53,11 @@ if(sell_flag == "1\n"):
     print("EARNS IN BUSD: " + str(float(str(btc_bought))*float(str(current_price))-used_busd)[:-16] + " BUSD")
     print("--------------------\n")
 else:
-    print("YOU ALREADY SOLD BTC. WAIT TO THE NEXT ROUND")
+    last_sell_price=str(read_last_value(config.SELL_PATH))
+    last_trade=read_last_history_value(config.HISTORIC_PATH)
+    start = last_trade.find("TRADE: ") + len("TRADE: ")
+    print("LAST SELL: " + str(last_sell_price[:-7])+ " BUSD")
+    print("CURRENT PRICE: " + str(current_price[:-6]) + " BUSD")
+    print("You already sold BTC and result was: " + str(last_trade[start:-1]))
+    print("If you had not sold and are selling now the result would have been: " + str(diff)+ "%")
+    

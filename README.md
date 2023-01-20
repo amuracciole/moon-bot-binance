@@ -9,6 +9,9 @@ However, guided by the motto **"better to gain a little than to lose a lot"**, i
 
 :warning: **ALERT!: This is an academic task and NOT AN INVEST ADVISE** :warning:
 
+## Menu :computer:
+By executing the menu.py script, an interactive menu opens in the console, allowing the user to make a series of checks quickly and easily.
+
 ## Keys :key:
 Plese add you own keys and paths in [config.py](https://github.com/amuracciole/moon_bot_binance/blob/main/config.py) file
 - API_KEY & API_SECRET -> Obtained in Binance web

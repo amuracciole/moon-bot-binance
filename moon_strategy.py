@@ -99,7 +99,7 @@ for x in dates.new_moon:
         qnt_sell=str(balances[0])[0:7]
         #sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
         sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
-        add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "             " + current_price,"historic")
+        add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "         " + current_price,"historic")
         add_line_in_file(current_price,"sell")
         
         add_line_in_file(str(today) + " - " + str(diff) + " % - SELL!", "difference")
@@ -116,7 +116,7 @@ if (no_today_flag==True and sell_flag=="1\n" and diff>=10):
     qnt_sell=str(balances[0])[0:7]
     #sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
     sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
-    add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "             " + current_price,"historic")
+    add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "         " + current_price,"historic")
     add_line_in_file(current_price,"sell")
     add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " % \n", "historic")
     add_line_in_file("0", "flag")
