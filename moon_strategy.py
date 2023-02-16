@@ -82,7 +82,11 @@ add_log(today)
 
 #Get balance (before operation)
 print("\nBALANCE (BEFORE):")
-balances = get_balance()
+try:
+    balances = get_balance()
+except:
+    send_telegram_msg("BINANCE_ERROR", today, "null", "null")
+    exit(),
 print("BTC: " + str(balances[0]))
 print("BUSD: " + str(balances[1]))
 
