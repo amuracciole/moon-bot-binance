@@ -12,13 +12,15 @@ def send_telegram_msg(code, date, quantity, earn):
     if(code=="BUY"):
         text= "(" + str(date) + ") --> " + str(code) + "\n----------------------\n" + str(quantity) + " BTC"
     elif(code=="SELL"):
-        if earn > 0:
+        if float(earn) > 0:
             emoji = "🟢"
-        elif earn < 0:
+        elif float(earn) < 0:
             emoji = "🔴"
         else:
             emoji = "🟡"
         text= "(" + str(date) + ") --> " + str(code) + "\n-----------------------\n" + str(quantity) + " BTC \n\n" + emoji + " EARN: " + str(earn) + " %"
+    elif(code=="DAY"):
+        text= "Script run"
     elif(code=="BINANCE_ERROR"):
         text= "❗ The program could not be executed. Check that the created API still exists or that the secure IPs include your current public IP."
     url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text=" + text
