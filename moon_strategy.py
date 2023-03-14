@@ -109,8 +109,7 @@ for x in dates.new_moon:
         add_line_in_file(str(today) + " - " + str(diff) + " % - SELL!", "difference")
         add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " % \n", "historic")
         add_line_in_file("0", "flag")
-       
-        #Send telegram message and email
+        
         send_telegram_msg("SELL", today, str(qnt_sell), str(diff))
         send_email("SELL", today, str(qnt_sell), str(diff))
         no_today_flag=False

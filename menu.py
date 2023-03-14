@@ -3,6 +3,8 @@ import time
 import config
 from binance.client import Client
 import dates
+from telegram_bot import *
+from email_bot import *
 from datetime import date, datetime
 
 client = Client(config.API_KEY, config.API_SECRET)
@@ -16,7 +18,9 @@ def menu():
     print("6 - See history file")
     print("7 - See difference file")
     print("8 - Next SELL/BUY day")
-    print("9 - EXIT")
+    print("9 - Test Telegram message")
+    print("10 - Test email")
+    print("0 - EXIT")
 
 
 def read_last_value(file_path):
@@ -81,6 +85,12 @@ while flag:
         print("NEXT NEW MOON (SELL): " + str(newmoon[0]) + " -> In " + str(date3 - date1)[:-9])
         input("\nPress enter to continue")
     elif option == "9":
+        today = str(date.today())
+        send_telegram_msg("TEST", today, "null", "null")
+    elif option == "10":
+        today = str(date.today())
+        send_email("TEST", today, "0", "0")
+    elif option == "0":
         os.system("clear")
         flag = False
     else:

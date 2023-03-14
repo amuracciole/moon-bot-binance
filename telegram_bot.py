@@ -23,6 +23,8 @@ def send_telegram_msg(code, date, quantity, earn):
         text= "Script run"
     elif(code=="BINANCE_ERROR"):
         text= "❗ The program could not be executed. Check that the created API still exists or that the secure IPs include your current public IP."
+    elif(code=="TEST"):
+        text = code
     url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text=" + text
     results = requests.get(url_req)
     print(results.json())
