@@ -6,9 +6,7 @@ import config
 
 def send_telegram_msg(code, date, quantity, earn):
     #token = config.TELEGRAM_TOKEN
-    token='5476845537:AAEQ9DEp-B3LnjZ0nbAiBd2chu_AsI4kvio'
     #chat_id = config.TELEGRAM_CHAT_ID
-    chat_id='1538349259'
     if(code=="BUY"):
         text= "(" + str(date) + ") --> " + str(code) + "\n----------------------\n" + str(quantity) + " BTC"
     elif(code=="SELL"):
