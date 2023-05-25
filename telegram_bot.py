@@ -5,8 +5,8 @@ import config
 # https://www.youtube.com/watch?v=M9IGRWFX_1w&ab_channel=BaoLuThe
 
 def send_telegram_msg(code, date, quantity, earn):
-    #token = config.TELEGRAM_TOKEN
-    #chat_id = config.TELEGRAM_CHAT_ID
+    token = config.TELEGRAM_TOKEN
+    chat_id = config.TELEGRAM_CHAT_ID
     if(code=="BUY"):
         text= "(" + str(date) + ") --> " + str(code) + "\n----------------------\n" + str(quantity) + " BTC"
     elif(code=="SELL"):
