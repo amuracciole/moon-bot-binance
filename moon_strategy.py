@@ -16,10 +16,10 @@ client = Client(config.API_KEY, config.API_SECRET)
 
 def get_balance():
     btc_balance = client.get_asset_balance(asset='BTC')
-    busd_balance = client.get_asset_balance(asset='BUSD')
+    usdt_balance = client.get_asset_balance(asset='USDT')
     btc_float = float(btc_balance["free"])
-    busd_float = float(busd_balance["free"])
-    return btc_float, busd_float
+    usdt_float = float(usdt_balance["free"])
+    return btc_float, usdt_float
 
 def get_current_price(pair):
   current_prices = client.get_all_tickers()
@@ -88,21 +88,21 @@ except:
     send_telegram_msg("BINANCE_ERROR", today, "null", "null")
     exit(),
 print("BTC: " + str(balances[0]))
-print("BUSD: " + str(balances[1]))
+print("USDT: " + str(balances[1]))
 
 sell_flag = read_last_value(config.FLAG_PATH)
 no_today_flag=True
 
 last_buy_price=str(read_last_value(config.BUY_PATH))
-current_price=str(get_current_price("BTCBUSD"))
+current_price=str(get_current_price("BTCUSDT"))
 diff=calculate_diffenrence(last_buy_price, current_price)
 
 #SELL
 for x in dates.new_moon:
     if(today==x and sell_flag=="1\n"):
         qnt_sell=str(balances[0])[0:7]
-        #sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
-        sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+        #sell_order = client.create_test_order(symbol="BTCUSDT", side="SELL", type="MARKET", quantity=qnt_sell)
+        sell_order = client.create_order(symbol="BTCUSDT", side="SELL", type="MARKET", quantity=qnt_sell)
         add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "         " + current_price,"historic")
         add_line_in_file(current_price,"sell")
         
@@ -117,8 +117,8 @@ for x in dates.new_moon:
 
 if (no_today_flag==True and sell_flag=="1\n" and diff>=10):
     qnt_sell=str(balances[0])[0:7]
-    #sell_order = client.create_test_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
-    sell_order = client.create_order(symbol="BTCBUSD", side="SELL", type="MARKET", quantity=qnt_sell)
+    #sell_order = client.create_test_order(symbol="BTCUSDT", side="SELL", type="MARKET", quantity=qnt_sell)
+    sell_order = client.create_order(symbol="BTCUSDT", side="SELL", type="MARKET", quantity=qnt_sell)
     add_line_in_file(str(today) + "      " + "SELL" + "       " + str(qnt_sell) + "         " + current_price,"historic")
     add_line_in_file(current_price,"sell")
     add_line_in_file("EARNS IN THE LAST TRADE: " + str(diff) + " % \n", "historic")
@@ -136,11 +136,11 @@ else:
 #BUY
 for x in dates.full_moon:
     if(today==x):
-        qnt_buy = str(balances[1]/float(get_current_price("BTCBUSD")))[0:7]
-        #buy_order = client.create_test_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
-        buy_order = client.create_order(symbol="BTCBUSD", side="BUY", type="MARKET", quantity=qnt_buy)
-        add_line_in_file(str(today) + "      " + "BUY" + "        " + str(get_balance()[0]) + "           " + str(get_current_price("BTCBUSD")),"historic")
-        add_line_in_file(str(get_current_price("BTCBUSD")),"buy")
+        qnt_buy = str(balances[1]/float(get_current_price("BTCUSDT")))[0:7]
+        #buy_order = client.create_test_order(symbol="BTCUSDT", side="BUY", type="MARKET", quantity=qnt_buy)
+        buy_order = client.create_order(symbol="BTCUSDT", side="BUY", type="MARKET", quantity=qnt_buy)
+        add_line_in_file(str(today) + "      " + "BUY" + "        " + str(get_balance()[0]) + "           " + str(get_current_price("BTCUSDT")),"historic")
+        add_line_in_file(str(get_current_price("BTCUSDT")),"buy")
         add_line_in_file("1", "flag")
 
         add_line_in_file(str(today) + " - 0% BUY!", "difference")
@@ -154,5 +154,5 @@ for x in dates.full_moon:
 print("\nBALANCE (AFTER):")
 balances_after = get_balance()
 print("BTC: " + str(balances_after[0]))
-print("BUSD: " + str(balances_after[1]))
+print("USDT: " + str(balances_after[1]))
 print("\n**********************\n")
