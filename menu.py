@@ -41,10 +41,10 @@ while flag:
     option = input("\nYour option: ")
 
     if option == "1":
-        print ("LAST BUY: " + str(read_last_value(config.BUY_PATH))[:-7] + " USD")
+        print ("LAST BUY: " + str(read_last_value(config.BUY_PATH))[:-7] + " USDT")
         input("\nPress enter to continue")
     elif option == "2":
-        print ("LAST SELL: " + str(read_last_value(config.SELL_PATH))[:-7] + " USD")
+        print ("LAST SELL: " + str(read_last_value(config.SELL_PATH))[:-7] + " USDT")
         input("\nPress enter to continue")
     elif option == "3":
         exec(open("./actual_difference.py").read())

@@ -44,13 +44,13 @@ current_price=str(get_current_price("BTCUSDT"))
 diff=calculate_diffenrence(last_buy_price, current_price)
 if(sell_flag == "1\n"):
     btc_bought=read_last_value(config.HISTORIC_PATH)[27:-26]
-    used_busd = float(str(btc_bought))*float(str(last_buy_price))
+    used_usdt = float(str(btc_bought))*float(str(last_buy_price))
     print("\n--------------------")
     print("LAST BUY: " + str(last_buy_price[:-7])+ " USDT")
     print("CURRENT PRICE: " + str(current_price[:-6]) + " USDT")
     print("DIFFERENCE: " + str(float(current_price) - float(last_buy_price[:-1]))[:-12] + " USDT")
     print("\nEARN IF YOU SELL RIGHT NOW: " + str(diff)+ "%")
-    print("EARNS IN USDT: " + str(float(str(btc_bought))*float(str(current_price))-used_busd)[:-16] + " USDT")
+    print("EARNS IN USDT: " + str(float(str(btc_bought))*float(str(current_price))-used_usdt)[:-16] + " USDT")
     print("--------------------\n")
 else:
     last_sell_price=str(read_last_value(config.SELL_PATH))
