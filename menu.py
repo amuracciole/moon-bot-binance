@@ -50,8 +50,8 @@ while flag:
         exec(open("./actual_difference.py").read())
         input("\nPress enter to continue")
     elif option == "4":
-        current_price=str(get_current_price("BTCBUSD"))
-        print("CURRENT PRICE: " + str(current_price[:-6]) + " BUSD")
+        current_price=str(get_current_price("BTCUSDT"))
+        print("CURRENT PRICE: " + str(current_price[:-6]) + " USDT")
         input("\nPress enter to continue")
     elif option == "5":
         with open("logs.txt") as f:
