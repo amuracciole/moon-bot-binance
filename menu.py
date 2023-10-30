@@ -71,18 +71,24 @@ while flag:
         newmoon=[]
         
         for x in dates.full_moon:
-            if x > today:
+            if x >= today:
                 fullmoon.append(x)
         
         for x in dates.new_moon:
-            if x > today:
+            if x >= today:
                 newmoon.append(x)
 
         date1 = datetime.strptime(today, '%Y-%m-%d')
         date2 = datetime.strptime(fullmoon[0], '%Y-%m-%d')
         date3 = datetime.strptime(newmoon[0], '%Y-%m-%d')
-        print("NEXT FULL MOON (BUY): " + str(fullmoon[0]) + " -> In " + str(date2 - date1)[:-9])
-        print("NEXT NEW MOON (SELL): " + str(newmoon[0]) + " -> In " + str(date3 - date1)[:-9])
+        if (str(date2 - date1)[:-9])=="":
+            print("NEXT FULL MOON (BUY): " + str(fullmoon[0]) + " -> TODAY")
+        else:
+            print("NEXT FULL MOON (BUY): " + str(fullmoon[0]) + " -> In " + str(date2 - date1)[:-9])
+        if (str(date3 - date1)[:-9])=="":
+            print("NEXT NEW MOON (SELL): " + str(newmoon[0]) + " -> TODAY")
+        else:
+            print("NEXT NEW MOON (SELL): " + str(newmoon[0]) + " -> In " + str(date3 - date1)[:-9])
         input("\nPress enter to continue")
     elif option == "9":
         today = str(date.today())
